@@ -8,7 +8,7 @@ Receive session change notifications from Windows.
 package main
 
 import (
-	"github.com/brunoqc/go-windows-session-notifications"
+	"github.com/pavelblossom/go-windows-session-notifications"
 	"log"
 )
 

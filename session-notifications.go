@@ -1,47 +1,3 @@
-// Receive session change notifications from Windows
-
-// Receive session change notifications from Windows.
-//
-// Example
-//     package main
-//
-//     import (
-//     	"github.com/brunoqc/go-windows-session-notifications"
-//     	"log"
-//     )
-//
-//     func main() {
-//     	quit := make(chan int)
-//
-//     	chanMessages := make(chan session_notifications.Message, 100)
-//     	chanClose := make(chan int)
-//
-//     	go func() {
-//     		for {
-//     			select {
-//     			case m := <-chanMessages:
-//     				switch m.UMsg {
-//     				case session_notifications.WM_WTSSESSION_CHANGE:
-//     					switch m.Param {
-//     					case session_notifications.WTS_SESSION_LOCK:
-//     						log.Println("session locked")
-//     					case session_notifications.WTS_SESSION_UNLOCK:
-//     						log.Println("session unlocked")
-//     					}
-//     				case session_notifications.WM_QUERYENDSESSION:
-//     					log.Println("log off or shutdown")
-//     				}
-//     				close(m.ChanOk)
-//     			}
-//     		}
-//     	}()
-//
-//     	session_notifications.Subscribe(chanMessages, chanClose)
-//
-//     	// ctrl+c to quit
-//     	<-quit
-//     }
-//
 package session_notifications
 
 // #cgo LDFLAGS: -lwtsapi32
@@ -82,6 +38,7 @@ type Message struct {
 	UMsg   int
 	Param  int
 	ChanOk chan int
+	Sid    int
 }
 
 var (
@@ -92,10 +49,11 @@ var (
 )
 
 //export relayMessage
-func relayMessage(message C.uint, wParam C.uint) {
+func relayMessage(message C.uint, wParam C.uint, lParam C.uint) {
 	msg := Message{
 		UMsg:  int(message),
 		Param: int(wParam),
+		Sid:   int(lParam),
 	}
 	msg.ChanOk = make(chan int)
 
