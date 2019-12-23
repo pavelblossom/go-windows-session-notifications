@@ -43,9 +43,8 @@ type Message struct {
 
 var (
 	chanMessages = make(chan Message, 1000)
-
-	kernel32    = syscall.MustLoadDLL("kernel32.dll")
-	CloseHandle = kernel32.MustFindProc("CloseHandle")
+	kernel32     = syscall.MustLoadDLL("kernel32.dll")
+	CloseHandle  = kernel32.MustFindProc("CloseHandle")
 )
 
 //export relayMessage
