@@ -14,7 +14,6 @@ import (
 
 func main() {
 	quit := make(chan int)
-
 	changes := make(chan int, 100)
 	closeChan := make(chan int)
 
