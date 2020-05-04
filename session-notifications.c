@@ -8,10 +8,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     switch (message)
     {
     case WM_QUERYENDSESSION:
-        relayMessage(message, lParam);
+        relayMessage(message, lParam,lParam);
         break;
     case WM_WTSSESSION_CHANGE:
-        relayMessage(message, wParam);
+        relayMessage(message, wParam,lParam);
         break;
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);
@@ -43,7 +43,7 @@ DWORD WINAPI WatchSessionNotifications(LPVOID lpParam)
         return 0;
 
     UpdateWindow(hwnd);
-    WTSRegisterSessionNotification(hwnd, NOTIFY_FOR_THIS_SESSION);
+    WTSRegisterSessionNotification(hwnd, /*NOTIFY_FOR_THIS_SESSION*/NOTIFY_FOR_ALL_SESSIONS);
 
     while (GetMessage(&msg,NULL,0,0) > 0)
     {
